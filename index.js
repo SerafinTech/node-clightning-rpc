@@ -21,17 +21,20 @@ class CLightningRPC {
 
             client.on("data", data => {
                 result = Buffer.concat([result, data])
-                try {
-                    const resObj = JSON.parse(result.toString())
-                    client.end()
-                    if (resObj.error) {
-                        reject(resObj.error)
+                if(result.slice(-3).toString() === ' }\n') {
+                    try {
+                        const resObj = JSON.parse(result.toString())
+                        client.end()
+                        if (resObj.error) {
+                            reject(resObj.error)
+                        }
+                        else {
+                            resolve(resObj.result)
+                        }                   
                     }
-                    else {
-                        resolve(resObj.result)
-                    }                   
-                }
-                catch (err) {
+                    catch (err) {
+                        reject(err)
+                    }
                 }
             })
 
@@ -173,6 +176,117 @@ class CLightningRPC {
         return new Promise((resolve, reject) => {
             this.rpcRequest('waitanyinvoice', {
                 lastpay_index: lastpay_index
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    decodePay(bolt11, description = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('decodepay', {
+                bolt11: bolt11,
+                description: description
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    decodePay(bolt11, description = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('decodepay', {
+                bolt11: bolt11,
+                description: description
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    help() {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('help', {})
+                .then(data => {
+                    resolve(data.help)
+                })
+                .catch(reject)
+        })
+    }
+
+    stop() {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('stop', {})
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    getLog(level = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('getlog', {
+                level: level
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    getInfo() {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('getinfo', {})
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    sendPay(route) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('sendpay', {
+                route: route
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    waitSendPay(payment_hash, timeout) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('waitsendpay', {
+                payment_hash: payment_hash,
+                timeout: timeout
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    pay(bolt11, msatoshi = null, dfor = 60, description = null, riskfactor = null, maxfeepercent = null, retry_for = null, maxdelay = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('pay', {
+                bolt11: bolt11,
+                msatoshi: msatoshi,
+                description: description,
+                riskfactor: riskfactor,
+                maxfeepercent: maxfeepercent,
+                retry_for: retry_for,
+                maxdelay: maxdelay
             })
                 .then(data => {
                     resolve(data)
