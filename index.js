@@ -2,7 +2,7 @@ const net = require('net')
 const homedir = require('os').homedir()
 
 class CLightningRPC {
-    constructor(rpcID = homedir + '/.lightning/lightning-rpc') {
+    constructor(rpcID = homedir + '/.lightning/lightning-rpc', timeout = 10000) {
         this.rpcID = rpcID
     }
 
@@ -197,19 +197,6 @@ class CLightningRPC {
         })
     }
 
-    decodePay(bolt11, description = null) {
-        return new Promise((resolve, reject) => {
-            this.rpcRequest('decodepay', {
-                bolt11: bolt11,
-                description: description
-            })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
-        })
-    }
-
     help() {
         return new Promise((resolve, reject) => {
             this.rpcRequest('help', {})
@@ -230,7 +217,7 @@ class CLightningRPC {
         })
     }
 
-    getLog(level = null) {
+    getLog(level = 'info') {
         return new Promise((resolve, reject) => {
             this.rpcRequest('getlog', {
                 level: level
@@ -252,10 +239,11 @@ class CLightningRPC {
         })
     }
 
-    sendPay(route) {
+    sendPay(route, payment_hash) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('sendpay', {
-                route: route
+                route: route,
+                payment_hash: payment_hash
             })
                 .then(data => {
                     resolve(data)
@@ -277,7 +265,7 @@ class CLightningRPC {
         })
     }
 
-    pay(bolt11, msatoshi = null, dfor = 60, description = null, riskfactor = null, maxfeepercent = null, retry_for = null, maxdelay = null) {
+    pay(bolt11, msatoshi = null, description = null, riskfactor = null, maxfeepercent = null, retry_for = null, maxdelay = null) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('pay', {
                 bolt11: bolt11,
@@ -287,6 +275,80 @@ class CLightningRPC {
                 maxfeepercent: maxfeepercent,
                 retry_for: retry_for,
                 maxdelay: maxdelay
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    fundChannel(id, satoshi) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('fundchannel', {
+                id: id,
+                satoshi: satoshi
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    closeChannel(id, force = null, timeout = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('close', {
+                id: id,
+                force: force,
+                timeout: timeout
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    withdraw(destination, satoshi) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('withdraw', {
+                destination: destination,
+                satoshi: satoshi
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    newAddress(addresstype = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('newaddr', {
+                addresstype: addresstype
+            })
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+    
+    listFunds() {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('listfunds', {})
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(reject)
+        })
+    }
+
+    disconnectPeer(id) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('disconnect', {
+                id: id
             })
                 .then(data => {
                     resolve(data)

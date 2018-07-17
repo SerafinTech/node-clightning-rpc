@@ -1,11 +1,15 @@
 {
   "name": "clightning-rpc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Node library for accessing the c-lightning rpc server over ipc",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jason Serafin",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SerafinTech/node-clightning-rpc.git"
+  }
 }
