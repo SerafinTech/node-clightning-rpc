@@ -8,9 +8,10 @@ Installation
 npm install clightning-rpc --save
 ```
 
-##Usage
-###Example
-```js
+## Usage
+
+### Example
+```javascript
 const CLightning = require('clightning-rpc')
 
 const clrpc = new CLightning()
