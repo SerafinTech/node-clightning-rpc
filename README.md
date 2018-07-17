@@ -1,9 +1,6 @@
 # node-clightning-rpc
 Connect to C-lightning with RPC
 
-## Status
-[![npm version][npm-image]][npm-url]
-
 ## Installation
 Installation
 
@@ -27,10 +24,4 @@ clrpc.listNodes()
 .catch(e => {
     console.log(e)
 })
-```
-
-## Release
-
-```sh
-npm version [<newversion> | major | minor | patch] -m "Release %s"
 ```
