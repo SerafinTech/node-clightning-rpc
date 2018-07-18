@@ -2,7 +2,7 @@ const net = require('net')
 const homedir = require('os').homedir()
 
 class CLightningRPC {
-    constructor(rpcID = homedir + '/.lightning/lightning-rpc', timeout = 10000) {
+    constructor(rpcID = homedir + '/.lightning/lightning-rpc') {
         this.rpcID = rpcID
     }
 
@@ -45,13 +45,23 @@ class CLightningRPC {
         })
     }
 
-    listNodes(id = null) {
+    listNodes() {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('listnodes', {id: null})
+            .then(data => {
+                resolve(data.nodes)
+            })
+            .catch(reject)
+        })
+    }
+
+    getNode(id) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('listnodes', {id: id})
-                .then(data => {
-                    resolve(data.nodes)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data.nodes[0])
+            })
+            .catch(reject)
         })
     }
 
@@ -70,10 +80,10 @@ class CLightningRPC {
                 host: host,
                 port: port
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -83,10 +93,10 @@ class CLightningRPC {
                 id: null,
                 level: null
             })
-                .then(data => {
-                    resolve(data.peers)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data.peers)
+            })
+            .catch(reject)
         })
     }
 
@@ -96,10 +106,10 @@ class CLightningRPC {
                 id: id,
                 level: null
             })
-                .then(data => {
-                    resolve(data.peers)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data.peers[0])
+            })
+            .catch(reject)
         })
     }
 
@@ -111,10 +121,10 @@ class CLightningRPC {
                 riskfactor: riskfactor,
                 cltv: cltv
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -123,10 +133,22 @@ class CLightningRPC {
             this.rpcRequest('listchannels', {
                 short_channel_id: null
             })
-                .then(data => {
-                    resolve(data.channels)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data.channels)
+            })
+            .catch(reject)
+        })
+    }
+
+    getChannel(id) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('listchannels', {
+                short_channel_id: id
+            })
+            .then(data => {
+                resolve(data.channels[0])
+            })
+            .catch(reject)
         })
     }
 
@@ -140,10 +162,10 @@ class CLightningRPC {
                 fallbacks: fallbacks,
                 preimage: preimage
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -152,10 +174,22 @@ class CLightningRPC {
             this.rpcRequest('listinvoices', {
                 label: null
             })
-                .then(data => {
-                    resolve(data.invoices)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data.invoices)
+            })
+            .catch(reject)
+        })
+    }
+
+    getInvoice(label) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('listinvoices', {
+                label: label
+            })
+            .then(data => {
+                resolve(data.invoices[0])
+            })
+            .catch(reject)
         })
     }
 
@@ -165,10 +199,10 @@ class CLightningRPC {
                 label: label,
                 status: status
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -177,10 +211,10 @@ class CLightningRPC {
             this.rpcRequest('waitanyinvoice', {
                 lastpay_index: lastpay_index
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -190,30 +224,30 @@ class CLightningRPC {
                 bolt11: bolt11,
                 description: description
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
     help() {
         return new Promise((resolve, reject) => {
             this.rpcRequest('help', {})
-                .then(data => {
-                    resolve(data.help)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data.help)
+            })
+            .catch(reject)
         })
     }
 
     stop() {
         return new Promise((resolve, reject) => {
             this.rpcRequest('stop', {})
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -222,20 +256,20 @@ class CLightningRPC {
             this.rpcRequest('getlog', {
                 level: level
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
     getInfo() {
         return new Promise((resolve, reject) => {
             this.rpcRequest('getinfo', {})
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -245,10 +279,10 @@ class CLightningRPC {
                 route: route,
                 payment_hash: payment_hash
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -258,10 +292,10 @@ class CLightningRPC {
                 payment_hash: payment_hash,
                 timeout: timeout
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -276,10 +310,10 @@ class CLightningRPC {
                 retry_for: retry_for,
                 maxdelay: maxdelay
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -289,10 +323,10 @@ class CLightningRPC {
                 id: id,
                 satoshi: satoshi
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -303,10 +337,10 @@ class CLightningRPC {
                 force: force,
                 timeout: timeout
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -316,10 +350,10 @@ class CLightningRPC {
                 destination: destination,
                 satoshi: satoshi
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -328,20 +362,20 @@ class CLightningRPC {
             this.rpcRequest('newaddr', {
                 addresstype: addresstype
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
     
     listFunds() {
         return new Promise((resolve, reject) => {
             this.rpcRequest('listfunds', {})
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
         })
     }
 
@@ -350,10 +384,35 @@ class CLightningRPC {
             this.rpcRequest('disconnect', {
                 id: id
             })
-                .then(data => {
-                    resolve(data)
-                })
-                .catch(reject)
+            .then(data => {
+                resolve(data)
+            })
+            .catch(reject)
+        })
+    }
+
+    listPayments(bolt11 = null, payment_hash = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('listpayments', {
+                bolt11: bolt11,
+                payment_hash: payment_hash
+            })
+            .then(data => {
+                resolve(data.payments)
+            })
+            .catch(reject)
+        })
+    }
+
+    devListAddresses(index = null) {
+        return new Promise((resolve, reject) => {
+            this.rpcRequest('dev-listaddrs', {
+                bip32_max_index: index
+            })
+            .then(data => {
+                resolve(data.addresses)
+            })
+            .catch(reject)
         })
     }
 }
