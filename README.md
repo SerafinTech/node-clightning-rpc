@@ -50,7 +50,7 @@ lightning-rpc methods and coresponding function
 * waitanyinvoice : `waitAnyInvoice([lastpay_index])`
 * decodepay : `client.decodePay(bolt11[, description])`
 * help : `client.help()`
-* stop : ``client.stop()`
+* stop : `client.stop()`
 * getlog : `client.getLog([level])`
 * getinfo : `client.getInfo()`
 * sendPay : `client.sendPay(route, payment_hash)`
