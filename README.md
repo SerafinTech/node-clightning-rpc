@@ -60,7 +60,7 @@ lightning-rpc methods and coresponding function
 * close : `client.closeChannel(id[, force][, timeout])`
 * withdraw : `client.withdraw(destination, satoshi)`
 * newaddr : `client.newAddress([addresstype])`
-* listfunds : `client.listFunds`
+* listfunds : `client.listFunds()`
 * disconnect : `client.disconnectPeer(id)`
 * listpayments : `client.listPayments()`
 * dev-listaddrs : `client.devListAddresses([index])`
