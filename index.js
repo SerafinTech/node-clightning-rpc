@@ -1,6 +1,18 @@
 const net = require('net')
 const homedir = require('os').homedir()
 
+//Promise Helper Function
+const chainPromises = (funcs, continueOnCatch = false) => {
+    return funcs.reduce((promise, func) => {
+        if(continueOnCatch) {
+            return promise.then(result => func().then(r => result.concat(r)).catch(e => result.concat(e)))
+        } else {
+            return promise.then(result => func().then(r => result.concat(r)))
+        }
+    }, Promise.resolve([]))
+}
+
+//Main Class
 class CLightningRPC {
     constructor(rpcID = homedir + '/.lightning/lightning-rpc') {
         this.rpcID = rpcID
@@ -9,7 +21,7 @@ class CLightningRPC {
     rpcRequest(command, params) {
         return new Promise((resolve, reject) => {
             var result = Buffer.alloc(0)
-            const client = net.createConnection(this.rpcID)
+            const client = net.createConnection({path: this.rpcID})
             client.on("connect", () => {
                 const request = {
                     method: command,
@@ -415,6 +427,19 @@ class CLightningRPC {
             .catch(reject)
         })
     }
+
+    //Utility methods
+
+    // utilConnectPeers: Connects Array of Peers sequentially
+    //  `ignoreFailed` = `true` will pass connect error to Promise resolve.
+    //  `ignoreFailed` = `false` will call Promise reject and will not try to connect
+    //     to any additional peers. 
+    utilConnectPeers(peerList, ignoreFailed = true) {
+        const peers = peerList.map(url => () => this.connectToPeer(url))
+        return chainPromises(peers, ignoreFailed)
+    }
 }
+
+
 
 module.exports = CLightningRPC
