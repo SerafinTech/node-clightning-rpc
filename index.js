@@ -101,10 +101,7 @@ class CLightningRPC {
 
     listPeers() {
         return new Promise((resolve, reject) => {
-            this.rpcRequest('listpeers', {
-                id: null,
-                level: null
-            })
+            this.rpcRequest('listpeers', {})
             .then(data => {
                 resolve(data.peers)
             })
