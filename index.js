@@ -59,7 +59,7 @@ class CLightningRPC {
 
     listNodes() {
         return new Promise((resolve, reject) => {
-            this.rpcRequest('listnodes', {id: null})
+            this.rpcRequest('listnodes', {})
             .then(data => {
                 resolve(data.nodes)
             })
@@ -139,9 +139,7 @@ class CLightningRPC {
 
     listChannels() {
         return new Promise((resolve, reject) => {
-            this.rpcRequest('listchannels', {
-                short_channel_id: null
-            })
+            this.rpcRequest('listchannels', {})
             .then(data => {
                 resolve(data.channels)
             })
