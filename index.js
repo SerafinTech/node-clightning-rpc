@@ -33,7 +33,16 @@ class CLightningRPC {
 
             client.on("data", data => {
                 result = Buffer.concat([result, data])
-                if(result.slice(-3).toString() === ' }\n') {
+
+                var resultString = result.toString();
+                var valid = true;
+                try {
+                    JSON.parse(resultString);
+                } catch (e) {
+                    valid = false;
+                }
+
+                if(valid) {
                     try {
                         const resObj = JSON.parse(result.toString())
                         client.end()
@@ -213,7 +222,7 @@ class CLightningRPC {
         })
     }
 
-    waitAnyInvoice(lastpay_index = null) {
+    waitAnyInvoice(lastpay_index) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('waitanyinvoice', {
                 lastpay_index: lastpay_index
@@ -225,7 +234,7 @@ class CLightningRPC {
         })
     }
 
-    decodePay(bolt11, description = null) {
+    decodePay(bolt11, description) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('decodepay', {
                 bolt11: bolt11,
@@ -306,7 +315,7 @@ class CLightningRPC {
         })
     }
 
-    pay(bolt11, msatoshi = null, description = null, riskfactor = null, maxfeepercent = null, retry_for = null, maxdelay = null) {
+    pay(bolt11, msatoshi, description, riskfactor, maxfeepercent, retry_for, maxdelay) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('pay', {
                 bolt11: bolt11,
@@ -337,7 +346,7 @@ class CLightningRPC {
         })
     }
 
-    closeChannel(id, force = null, timeout = null) {
+    closeChannel(id, force, timeout) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('close', {
                 id: id,
@@ -364,7 +373,7 @@ class CLightningRPC {
         })
     }
 
-    newAddress(addresstype = null) {
+    newAddress(addresstype) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('newaddr', {
                 addresstype: addresstype
@@ -398,7 +407,7 @@ class CLightningRPC {
         })
     }
 
-    listPayments(bolt11 = null, payment_hash = null) {
+    listPayments(bolt11, payment_hash) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('listpayments', {
                 bolt11: bolt11,
@@ -411,7 +420,7 @@ class CLightningRPC {
         })
     }
 
-    devListAddresses(index = null) {
+    devListAddresses(index) {
         return new Promise((resolve, reject) => {
             this.rpcRequest('dev-listaddrs', {
                 bip32_max_index: index
